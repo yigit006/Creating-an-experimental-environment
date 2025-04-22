@@ -1,0 +1,75 @@
+🔧 Kali Linux ile Yerel Sızma Testi Ortamı Kurulumu (VirtualBox Üzerinden)
+Merhaba! Bu yazıda VirtualBox kullanarak iki Kali Linux sanal makinesi ile temel bir sızma testi ortamı nasıl oluşturulur, adım adım anlatacağım. Kurulum sırasında karşılaştığım sorunlar ve öğrendiğim detayları da paylaşacağım. Hedefim, hem bu süreci dokümante etmek hem de benzer bir ortam kurmak isteyenlere kaynak sağlamaktır.
+
+☑️ A. Sanallaştırma Ortamının Kurulumu
+
+1. İlk olarak VirtualBox'ı resmi sitesinden indirip bilgisayarıma kurdum.
+
+2. Ardından Kali Linux’un resmi sitesindeki "Virtual Machines" bölümünden, VirtualBox için özel hazırlanmış Kali imajını indirdim.
+
+3. İndirilen .ova dosyasını VirtualBox üzerinden içeri aktardım (Import Appliance).
+
+👨‍💻 B. Makine Kopyalama ve İsimlendirme
+
+4. Kurduğum sanal makineye “Killer” ismini verdim (saldırgan makine).
+
+5. Killer’ı klonladım ve ikinci makineme “Innocent” (hedef makine) adını verdim.
+
+6. Her iki makinede de sistemin o anki durumunu kayıt altına almak için “Snapshot” (Anlık Görüntü) aldım.
+
+📌 Snapshot’lar, sistemde değişiklik yapmadan önce kurtarma noktası olarak kullanılabilir. Hatalı işlemde hızlı geri dönüş sağlar.
+
+🌐 C. Ağ Ayarları
+
+7. Her iki makinenin ağ yapılandırmasında, Adapter 1 kısmını “Dahili Ağ (Internal Network)” olarak seçtim. Böylece makineler kendi arasında haberleşebilir hale geldi.
+
+8. Ayrıca, internete erişim sağlamak için Adapter 2 kısmına “NAT Ağı” ekledim. Böylece hem lokal saldırı ortamı hem de dış dünya bağlantısı sağladım.
+
+🌍 D. IP Adreslerinin El ile Yapılandırılması
+
+9. Sanal makineleri çalıştırdıktan sonra terminalde Türkçe karakterlerin algılanmadığını fark ettim.
+
+10. Bu sorunu çözmek için:
+
+Application Menu > Session and Startup > Application Autostart > Add
+
+Buraya şu komutu ekledim:
+
+setxkbmap tr
+
+Bu sayede her açılışta Türkçe klavye otomatik yüklenecekti.
+
+11. Ağ ayarları için:
+
+Settings > Advanced Network Configuration > Wired Connection 1 > IPv4 Settings
+
+kısmına geldim ve IP atamalarını manüel olarak yaptım.
+
+12. Başlangıçta Automatic (DHCP) kullanmayı denedim fakat makinelere restart attığımda IP’lerin değiştiğini gördüm. Bu nedenle yöntemi Manual olarak değiştirdim.
+
+🧠 Killer IP: 192.168.100.22
+🧠 Innocent IP: 192.168.100.11
+
+🛰️ E. Ping Testi ile İletişimi Doğrulama
+
+13. Terminal üzerinden her iki makineden de karşılıklı ping testi yaptım:
+
+ping 192.168.100.11   # Killer'dan Innocent'a
+ping 192.168.100.22   # Innocent'tan Killer'a
+
+Sonuç olarak, her iki makine de birbirine ulaşabiliyordu. Bu, ağ yapılandırmasının doğru yapıldığını gösteriyordu.
+
+
+📌 Genel Notlar ve Öğrendiklerim:
+DHCP yerine manüel IP atamak daha stabil bir yapı sunuyor.
+
+Dahili ağ ile dış dünyadan izole bir test ortamı oluşturmak mümkün.
+
+Snapshot almak, ileride sistemi bozarsam geri dönebilmek için hayat kurtarıcı.
+
+Başlangıçta bilmediğim pek çok şeyi araştırırken öğrendim ve bu süreci belgelemek çok faydalı oldu.
+
+
+🔜 Sonraki Adım:
+
+Bir sonraki yazımda, msfvenom kullanarak nasıl payload oluşturduğumu, bu payload'ı hedefe nasıl ilettiğimi ve Wireshark ile nasıl analiz yaptığımı detaylı bir şekilde anlatacağım.
